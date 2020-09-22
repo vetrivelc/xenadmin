@@ -34,7 +34,7 @@
 def XENADMIN_BRANDING_TAG = 'v2.0'
 def BRANDING_TAG = 'master' //use tag on release branches
 
-@Library(["xencenter-pipeline@v1.0"])
+@Library(['PacmanSharedLibrary', 'xencenter-pipeline@CP-33084'])
 import com.citrix.pipeline.xencenter.*
 
 properties([
@@ -56,16 +56,7 @@ node('xencenter') {
         builder.xenadminBrandingTag = XENADMIN_BRANDING_TAG
         builder.brandingTag = BRANDING_TAG
 
-        bumpBuildNumber(builder)
-        cleanWorkspace(builder)
-        checkoutSources(builder)
-        downloadDeps(builder)
-        runChecks(builder)
-        buildAndManifest(builder)
-        runTests(builder)
-        uploadArtifacts(builder)
-        scanBuild(builder)
-
+        runPipeline(builder)
         currentBuild.result = 'SUCCESS'
 
     } catch (Throwable ex) {
